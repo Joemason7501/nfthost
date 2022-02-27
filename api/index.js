@@ -1,37 +1,19 @@
-// Dependencies
-require('dotenv').config({path: "../.env"});
-const express = require('express');
-const cors = require('cors');
-const router = require('../routes');
-const app = express();
-const {errorHandler} = require('../middlewares/errorHandler');
-const production = true;
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import store from "./redux/store";
+import { Provider } from "react-redux";
+import "./styles/reset.css";
 
-// Database
-const connection = require('../db/connection');
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("root")
+);
 
-// Express Config
-app.options(cors());
-if (!production) {
-    app.use((req, res, next) => {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        next();
-    })
-}
-app.use(express.urlencoded({extended:true}));
-app.use(express.json());
-app.use('/api', router);
-app.use(errorHandler);
-
-// Connection
-connection.once('open', () => {
-    if (!production) {
-        console.log("Connected to DB.")
-        app.listen(8080, () => {
-            console.log(`App listening at http://localhost:${8080}`)
-        })
-    }
-});
-
-module.exports = app;
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
